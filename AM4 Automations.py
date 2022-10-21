@@ -8,12 +8,18 @@ import logging
 
 
 #Parameters
+
 fuel_buy_price = 400
 co2_buy_price = 120
 AM4_URL = 'URL HERE'
 #Random interval before script restarts (Minutes)
 time_min = 15
 time_max = 30
+#Number of times to run (set to 'Y' for infinite)
+runtime = 24
+infinite = 'N'
+
+#End of Parameters
 
 
 
@@ -22,13 +28,19 @@ logging.basicConfig(filename='AM4.log', encoding='utf-8', level=logging.INFO, fo
 
 #Variable for while loop
 count = 0
+countinf = 0
 
-while count < 24:
+while count < runtime or infinite == 'Y':
 
 
     #Loop and date/time variables
     loop_int = random.randint(time_min * 60, time_max * 60)
-    count = count + 1
+
+
+    if infinite == 'Y':
+        countinf = countinf + 1
+    else:
+        count = count + 1
 
 
     #Logging break
@@ -40,6 +52,7 @@ while count < 24:
     #Load webdrivers and login to site
     driver = webdriver.Firefox(executable_path="c:\webdrivers\geckodriver.exe")
     driver.get(AM4_URL)
+    driver.minimize_window()
 
 
 
@@ -194,5 +207,5 @@ while count < 24:
     updated_time = datetime.now() + timedelta(minutes=minutes)
     print(updated_time)
     print(minutes, "Minutes till next run")
-    print("Times Ran:", count)
+    print("Times Ran:", count + countinf)
     time.sleep(loop_int)
